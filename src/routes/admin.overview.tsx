@@ -63,7 +63,8 @@ function OverviewPage() {
       });
       let busiest: { name: string; count: number } | null = null;
       stationCounts.forEach((count, id) => {
-        if (!busiest || count > busiest.count) {
+        const cur = busiest;
+        if (!cur || count > cur.count) {
           busiest = { name: stationMap.get(id) ?? "Unknown", count };
         }
       });
