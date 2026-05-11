@@ -11,9 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ScanRouteImport } from './routes/scan'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ScanHistoryRouteImport } from './routes/scan.history'
 
 const TicketsRoute = TicketsRouteImport.update({
   id: '/tickets',
@@ -23,6 +25,11 @@ const TicketsRoute = TicketsRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScanRoute = ScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -40,41 +47,75 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScanHistoryRoute = ScanHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => ScanRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/book': typeof BookRoute
   '/login': typeof LoginRoute
+  '/scan': typeof ScanRouteWithChildren
   '/signup': typeof SignupRoute
   '/tickets': typeof TicketsRoute
+  '/scan/history': typeof ScanHistoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book': typeof BookRoute
   '/login': typeof LoginRoute
+  '/scan': typeof ScanRouteWithChildren
   '/signup': typeof SignupRoute
   '/tickets': typeof TicketsRoute
+  '/scan/history': typeof ScanHistoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/book': typeof BookRoute
   '/login': typeof LoginRoute
+  '/scan': typeof ScanRouteWithChildren
   '/signup': typeof SignupRoute
   '/tickets': typeof TicketsRoute
+  '/scan/history': typeof ScanHistoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/book' | '/login' | '/signup' | '/tickets'
+  fullPaths:
+    | '/'
+    | '/book'
+    | '/login'
+    | '/scan'
+    | '/signup'
+    | '/tickets'
+    | '/scan/history'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/book' | '/login' | '/signup' | '/tickets'
-  id: '__root__' | '/' | '/book' | '/login' | '/signup' | '/tickets'
+  to:
+    | '/'
+    | '/book'
+    | '/login'
+    | '/scan'
+    | '/signup'
+    | '/tickets'
+    | '/scan/history'
+  id:
+    | '__root__'
+    | '/'
+    | '/book'
+    | '/login'
+    | '/scan'
+    | '/signup'
+    | '/tickets'
+    | '/scan/history'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookRoute: typeof BookRoute
   LoginRoute: typeof LoginRoute
+  ScanRoute: typeof ScanRouteWithChildren
   SignupRoute: typeof SignupRoute
   TicketsRoute: typeof TicketsRoute
 }
@@ -93,6 +134,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scan': {
+      id: '/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof ScanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -116,16 +164,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scan/history': {
+      id: '/scan/history'
+      path: '/history'
+      fullPath: '/scan/history'
+      preLoaderRoute: typeof ScanHistoryRouteImport
+      parentRoute: typeof ScanRoute
+    }
   }
 }
+
+interface ScanRouteChildren {
+  ScanHistoryRoute: typeof ScanHistoryRoute
+}
+
+const ScanRouteChildren: ScanRouteChildren = {
+  ScanHistoryRoute: ScanHistoryRoute,
+}
+
+const ScanRouteWithChildren = ScanRoute._addFileChildren(ScanRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookRoute: BookRoute,
   LoginRoute: LoginRoute,
+  ScanRoute: ScanRouteWithChildren,
   SignupRoute: SignupRoute,
   TicketsRoute: TicketsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
