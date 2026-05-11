@@ -18,6 +18,10 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ScanHistoryRouteImport } from './routes/scan.history'
+import { Route as AdminValidationRouteImport } from './routes/admin.validation'
+import { Route as AdminRevenueRouteImport } from './routes/admin.revenue'
+import { Route as AdminPassengersRouteImport } from './routes/admin.passengers'
+import { Route as AdminOverviewRouteImport } from './routes/admin.overview'
 
 const TicketsRoute = TicketsRouteImport.update({
   id: '/tickets',
@@ -64,6 +68,26 @@ const ScanHistoryRoute = ScanHistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => ScanRoute,
 } as any)
+const AdminValidationRoute = AdminValidationRouteImport.update({
+  id: '/validation',
+  path: '/validation',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRevenueRoute = AdminRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPassengersRoute = AdminPassengersRouteImport.update({
+  id: '/passengers',
+  path: '/passengers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOverviewRoute = AdminOverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -73,6 +97,10 @@ export interface FileRoutesByFullPath {
   '/scan': typeof ScanRouteWithChildren
   '/signup': typeof SignupRoute
   '/tickets': typeof TicketsRoute
+  '/admin/overview': typeof AdminOverviewRoute
+  '/admin/passengers': typeof AdminPassengersRoute
+  '/admin/revenue': typeof AdminRevenueRoute
+  '/admin/validation': typeof AdminValidationRoute
   '/scan/history': typeof ScanHistoryRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -83,6 +111,10 @@ export interface FileRoutesByTo {
   '/scan': typeof ScanRouteWithChildren
   '/signup': typeof SignupRoute
   '/tickets': typeof TicketsRoute
+  '/admin/overview': typeof AdminOverviewRoute
+  '/admin/passengers': typeof AdminPassengersRoute
+  '/admin/revenue': typeof AdminRevenueRoute
+  '/admin/validation': typeof AdminValidationRoute
   '/scan/history': typeof ScanHistoryRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -95,6 +127,10 @@ export interface FileRoutesById {
   '/scan': typeof ScanRouteWithChildren
   '/signup': typeof SignupRoute
   '/tickets': typeof TicketsRoute
+  '/admin/overview': typeof AdminOverviewRoute
+  '/admin/passengers': typeof AdminPassengersRoute
+  '/admin/revenue': typeof AdminRevenueRoute
+  '/admin/validation': typeof AdminValidationRoute
   '/scan/history': typeof ScanHistoryRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -108,6 +144,10 @@ export interface FileRouteTypes {
     | '/scan'
     | '/signup'
     | '/tickets'
+    | '/admin/overview'
+    | '/admin/passengers'
+    | '/admin/revenue'
+    | '/admin/validation'
     | '/scan/history'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -118,6 +158,10 @@ export interface FileRouteTypes {
     | '/scan'
     | '/signup'
     | '/tickets'
+    | '/admin/overview'
+    | '/admin/passengers'
+    | '/admin/revenue'
+    | '/admin/validation'
     | '/scan/history'
     | '/admin'
   id:
@@ -129,6 +173,10 @@ export interface FileRouteTypes {
     | '/scan'
     | '/signup'
     | '/tickets'
+    | '/admin/overview'
+    | '/admin/passengers'
+    | '/admin/revenue'
+    | '/admin/validation'
     | '/scan/history'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -208,14 +256,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScanHistoryRouteImport
       parentRoute: typeof ScanRoute
     }
+    '/admin/validation': {
+      id: '/admin/validation'
+      path: '/validation'
+      fullPath: '/admin/validation'
+      preLoaderRoute: typeof AdminValidationRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/revenue': {
+      id: '/admin/revenue'
+      path: '/revenue'
+      fullPath: '/admin/revenue'
+      preLoaderRoute: typeof AdminRevenueRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/passengers': {
+      id: '/admin/passengers'
+      path: '/passengers'
+      fullPath: '/admin/passengers'
+      preLoaderRoute: typeof AdminPassengersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/overview': {
+      id: '/admin/overview'
+      path: '/overview'
+      fullPath: '/admin/overview'
+      preLoaderRoute: typeof AdminOverviewRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminOverviewRoute: typeof AdminOverviewRoute
+  AdminPassengersRoute: typeof AdminPassengersRoute
+  AdminRevenueRoute: typeof AdminRevenueRoute
+  AdminValidationRoute: typeof AdminValidationRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminOverviewRoute: AdminOverviewRoute,
+  AdminPassengersRoute: AdminPassengersRoute,
+  AdminRevenueRoute: AdminRevenueRoute,
+  AdminValidationRoute: AdminValidationRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -243,3 +327,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
