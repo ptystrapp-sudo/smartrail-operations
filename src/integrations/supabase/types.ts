@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action_type: string
@@ -344,7 +371,7 @@ export type Database = {
     Enums: {
       app_role: "commuter" | "station_staff" | "supervisor" | "admin"
       payment_status: "pending" | "completed" | "failed" | "refunded"
-      route_status: "operational" | "suspended" | "maintenance"
+      route_status: "operational" | "suspended" | "maintenance" | "archived"
       ticket_status: "active" | "used" | "expired" | "cancelled"
       ticket_type: "single" | "return" | "weekly" | "monthly"
       validation_result: "valid" | "invalid" | "overridden"
@@ -477,7 +504,7 @@ export const Constants = {
     Enums: {
       app_role: ["commuter", "station_staff", "supervisor", "admin"],
       payment_status: ["pending", "completed", "failed", "refunded"],
-      route_status: ["operational", "suspended", "maintenance"],
+      route_status: ["operational", "suspended", "maintenance", "archived"],
       ticket_status: ["active", "used", "expired", "cancelled"],
       ticket_type: ["single", "return", "weekly", "monthly"],
       validation_result: ["valid", "invalid", "overridden"],

@@ -1,12 +1,13 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Train, Ticket, ScanLine, LogOut, ShieldCheck, User as UserIcon } from "lucide-react";
+import { Train, Ticket, ScanLine, LogOut, ShieldCheck, User as UserIcon, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import type { ReactNode } from "react";
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { user, profile, roles, isStaff, signOut } = useAuth();
+  const { user, profile, roles, isStaff, hasRole, signOut } = useAuth();
+  const isAdmin = hasRole("admin");
   const nav = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
 
@@ -64,10 +65,16 @@ export function AppShell({ children }: { children: ReactNode }) {
                 {navLink("/tickets", "My Tickets", <Ticket className="h-4 w-4" />)}
               </>
             )}
-            {user && isStaff && (
+            {user && isStaff && !isAdmin && (
               <>
                 {navLink("/scan", "Scanner", <ScanLine className="h-4 w-4" />)}
                 {navLink("/scan/history", "Scan Log", <ShieldCheck className="h-4 w-4" />)}
+              </>
+            )}
+            {user && isAdmin && (
+              <>
+                {navLink("/admin/overview", "Operations", <LayoutDashboard className="h-4 w-4" />)}
+                {navLink("/scan", "Scanner", <ScanLine className="h-4 w-4" />)}
               </>
             )}
           </nav>
