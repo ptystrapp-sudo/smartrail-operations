@@ -13,7 +13,7 @@ export async function logAudit(opts: {
     action_type: opts.action,
     entity_type: opts.entityType,
     entity_id: opts.entityId ?? null,
-    previous_value: opts.previous ? (opts.previous as object) : null,
-    new_value: opts.next ? (opts.next as object) : null,
+    previous_value: (opts.previous ?? null) as never,
+    new_value: (opts.next ?? null) as never,
   });
 }
