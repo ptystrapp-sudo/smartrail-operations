@@ -110,7 +110,12 @@ function OverviewPage() {
           <KpiCard label="Used Today" value={data!.usedToday} icon={<CheckCircle2 className="h-4 w-4" />} hint="Validated at gates" />
           <KpiCard label="Failed Validations" value={data!.failedScans} icon={<XCircle className="h-4 w-4" />} hint="Rejected scans today" tone={data!.failedScans > 5 ? "destructive" : "default"} />
           <KpiCard label="Digital Adoption" value={`${data!.adoption}%`} icon={<Activity className="h-4 w-4" />} hint="Used / total scans" />
-          <KpiCard label="Busiest Station" value={data!.busiest?.name ?? "—"} icon={<MapPin className="h-4 w-4" />} hint={data!.busiest ? `${data!.busiest.count} scans` : "No scans yet"} />
+          {(() => {
+            const b = data!.busiest as { name: string; count: number } | null;
+            return (
+              <KpiCard label="Busiest Station" value={b?.name ?? "—"} icon={<MapPin className="h-4 w-4" />} hint={b ? `${b.count} scans` : "No scans yet"} />
+            );
+          })()}
           <KpiCard label="Total Scans" value={data!.totalScans} icon={<ScanLine className="h-4 w-4" />} hint="Validation attempts today" />
           <KpiCard label="Active Commuters" value={data!.commuters} icon={<Users className="h-4 w-4" />} hint="Registered passengers" />
         </div>
