@@ -181,7 +181,7 @@ function RoutesPage() {
         onOpenChange={(v) => !v && setDeleting(null)}
         entityLabel="this route"
         busy={del.isPending}
-        onConfirm={() => deleting && del.mutate(deleting)}
+        onConfirm={() => { if (deleting) del.mutate(deleting); }}
       />
     </div>
   );

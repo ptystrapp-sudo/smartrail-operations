@@ -182,7 +182,7 @@ function StationsPage() {
         onOpenChange={(v) => !v && setDeleting(null)}
         entityLabel={deleting?.station_name ?? "this station"}
         busy={del.isPending}
-        onConfirm={() => deleting && del.mutate(deleting)}
+        onConfirm={() => { if (deleting) del.mutate(deleting); }}
       />
     </div>
   );
