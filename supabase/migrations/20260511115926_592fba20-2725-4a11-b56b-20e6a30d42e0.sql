@@ -1,0 +1,1 @@
+alter type route_status add value if not exists 'archived';
