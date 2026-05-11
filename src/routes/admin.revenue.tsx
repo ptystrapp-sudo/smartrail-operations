@@ -32,8 +32,8 @@ function RevenuePage() {
       const routeOrigin = new Map((routes.data ?? []).map((r) => [r.id, r.origin_station]));
       const stationName = new Map((stations.data ?? []).map((s) => [s.id, s.station_name]));
 
-      const succeeded = (tx.data ?? []).filter((t) => t.transaction_status === "succeeded");
-      const failed = (tx.data ?? []).filter((t) => t.transaction_status !== "succeeded").length;
+      const succeeded = (tx.data ?? []).filter((t) => t.transaction_status === "completed");
+      const failed = (tx.data ?? []).filter((t) => t.transaction_status !== "completed").length;
 
       // Hourly today
       const today = new Date(); today.setHours(0, 0, 0, 0);

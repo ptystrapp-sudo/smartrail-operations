@@ -67,7 +67,7 @@ function ValidationPage() {
     const s = { success: 0, failed: 0, override: 0, expired: 0, duplicate: 0 };
     (data?.vlogs ?? []).forEach((v) => {
       if (v.override_used) s.override++;
-      if (v.validation_result === "success") s.success++;
+      if (v.validation_result === "valid") s.success++;
       else s.failed++;
       if (v.failure_reason?.toLowerCase().includes("expir")) s.expired++;
       if (v.failure_reason?.toLowerCase().includes("already") || v.failure_reason?.toLowerCase().includes("max")) s.duplicate++;
@@ -153,7 +153,7 @@ function ValidationPage() {
                   <TableCell>
                     {v.override_used ? (
                       <Badge variant="outline" className="text-warning border-warning/40">override</Badge>
-                    ) : v.validation_result === "success" ? (
+                    ) : v.validation_result === "valid" ? (
                       <Badge variant="outline" className="text-success border-success/40">success</Badge>
                     ) : (
                       <Badge variant="outline" className="text-destructive border-destructive/40">{v.validation_result}</Badge>

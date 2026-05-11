@@ -36,7 +36,7 @@ function OverviewPage() {
             .from("transactions")
             .select("amount, transaction_status, created_at")
             .gte("created_at", today)
-            .eq("transaction_status", "succeeded"),
+            .eq("transaction_status", "completed"),
           supabase.from("tickets").select("id", { count: "exact", head: true }).eq("ticket_status", "active"),
           supabase
             .from("tickets")
@@ -47,7 +47,7 @@ function OverviewPage() {
           supabase
             .from("validation_logs")
             .select("id", { count: "exact", head: true })
-            .neq("validation_result", "success")
+            .neq("validation_result", "valid")
             .gte("scan_timestamp", today),
           supabase.from("user_roles").select("user_id", { count: "exact", head: true }).eq("role", "commuter"),
           supabase.from("stations").select("id, station_name").eq("active_status", true),
@@ -171,7 +171,7 @@ function LiveFeed() {
         kind: v.override_used ? "supervisor_override" : v.validation_result,
         station: v.station_id ? stationMap.get(v.station_id) : undefined,
         status:
-          v.validation_result === "success"
+          v.validation_result === "valid"
             ? v.override_used ? "warning" : "success"
             : "destructive",
         detail: v.failure_reason ?? (v.override_used ? "Override accepted" : "Validation success"),
@@ -202,7 +202,7 @@ function LiveFeed() {
               id: `v-${v.id}`,
               ts: v.scan_timestamp,
               kind: v.override_used ? "supervisor_override" : v.validation_result,
-              status: v.validation_result === "success"
+              status: v.validation_result === "valid"
                 ? v.override_used ? "warning" : "success"
                 : "destructive",
               detail: v.failure_reason ?? (v.override_used ? "Override accepted" : "Validation success"),
