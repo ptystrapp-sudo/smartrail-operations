@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Train, Ticket, ScanLine, LogOut, ShieldCheck, User as UserIcon } from "lucide-react";
+import { Train, Ticket, ScanLine, LogOut, ShieldCheck, User as UserIcon, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
